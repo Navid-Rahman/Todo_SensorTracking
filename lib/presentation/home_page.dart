@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'widgets/base_page.dart';
+import 'package:to_do_sensor_tracking/presentation/todo_list/todo_list_home_screen.dart';
+import 'package:to_do_sensor_tracking/presentation/todo_list/todo_splash_screen.dart';
+import '../utils/base_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -18,7 +20,9 @@ class HomePage extends StatelessWidget {
               'To-Do List',
               const Color(0xff36E0E0),
               Colors.black,
-              () {},
+              () {
+                Navigator.pushNamed(context, TodoSplashScreen.routeName);
+              },
             ),
             const SizedBox(height: 20),
             buildButton(
