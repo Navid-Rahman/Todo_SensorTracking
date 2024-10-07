@@ -8,6 +8,17 @@ class TodoListHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const BasePage(child: Text('Todo List Home Screen'));
+    return BasePage(
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: const Color(0xff33CCCC),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(50),
+        ),
+        onPressed: null,
+        child: const Icon(Icons.add, color: Colors.white, size: 32),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      child: const Text('Todo List Home Screen'),
+    );
   }
 }
