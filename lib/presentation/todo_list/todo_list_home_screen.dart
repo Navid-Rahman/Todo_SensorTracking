@@ -25,7 +25,13 @@ class TodoListHomeScreen extends StatelessWidget {
           const SizedBox(height: 30),
           _topHeaderContainer(5, 6),
           const Divider(color: Color(0xffCFCFCF)),
-          _taskListView('My Task', '1'),
+          ListView.builder(
+            shrinkWrap: true,
+            itemCount: 3,
+            itemBuilder: (context, index) {
+              return _taskListView('Task List $index', '$index');
+            },
+          )
         ],
       ),
     );
