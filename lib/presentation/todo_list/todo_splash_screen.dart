@@ -34,8 +34,8 @@ class _TodoSplashScreenState extends State<TodoSplashScreen> {
             const SizedBox(height: 10),
             Image.asset(Assets.titleLogo),
             const SizedBox(height: 20),
-            CircularProgressIndicator(
-              color: Colors.primaries[0],
+            const CircularProgressIndicator(
+              color: Color(0xff33CCCC),
             ),
           ],
         ),

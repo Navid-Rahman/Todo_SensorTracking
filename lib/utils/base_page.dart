@@ -20,7 +20,7 @@ class BasePage extends StatelessWidget {
         child: Scaffold(
           floatingActionButton: floatingActionButton,
           floatingActionButtonLocation: floatingActionButtonLocation,
-          backgroundColor: Colors.white,
+          backgroundColor: const Color(0xffF8F8F8),
           body: Padding(
             padding: const EdgeInsets.all(12.0),
             child: child,
