@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:to_do_sensor_tracking/utils/base_page.dart';
+import '/utils/base_page.dart';
 
-import '../../constants/app_colors.dart';
+import '/constants/app_colors.dart';
 
 class TodoListHomeScreen extends StatelessWidget {
   const TodoListHomeScreen({super.key});
