@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
-import 'package:to_do_sensor_tracking/presentation/add_task/task_details_view.dart';
+import 'task_details_view.dart';
+import 'widgets/add_task_modal.dart';
+import 'widgets/task_list_item.dart';
 import '/constants/app_colors.dart';
 import '/utils/base_page.dart';
 
@@ -16,200 +16,75 @@ class AddTaskScreen extends StatefulWidget {
 
 class _AddTaskScreenState extends State<AddTaskScreen> {
   DateTime? _selectedDate;
+  TimeOfDay? _selectedTime;
+  String? _note;
 
-  // Function to handle date selection from date picker
-  void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
-    setState(() {
-      _selectedDate = args.value;
+  bool _isStarred = false;
+  bool _isCompleted = false;
+  final TextEditingController _taskController = TextEditingController();
+  final ValueNotifier<bool> _isTextEntered = ValueNotifier<bool>(false);
+
+  @override
+  void initState() {
+    super.initState();
+    _taskController.addListener(() {
+      _isTextEntered.value = _taskController.text.isNotEmpty;
     });
   }
 
-  // Function to show the task adding modal
+  @override
+  void dispose() {
+    _taskController.dispose();
+    _isTextEntered.dispose();
+    super.dispose();
+  }
+
   void _showAddTaskModal(BuildContext context) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.white,
       builder: (BuildContext context) {
-        return Padding(
-          padding:
-              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: _buildAddTaskModalContent(),
-        );
-      },
-    );
-  }
-
-  // Function to show the calendar modal for date selection
-  void _showCalendarModal(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.white,
-      builder: (BuildContext context) {
-        return Padding(
-          padding:
-              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: _buildCalendarModalContent(),
-        );
-      },
-    );
-  }
-
-  // Widget for the Add Task Modal Content
-  Widget _buildAddTaskModalContent() {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            children: [
-              Checkbox(
-                value: false,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(4)),
-                ),
-                side: const BorderSide(color: AppColors.hintColor, width: 1.5),
-                onChanged: (bool? value) {
-                  // Handle checkbox state change
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setModalState) {
+            return Padding(
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
+              child: AddTaskModal(
+                taskController: _taskController,
+                isTextEntered: _isTextEntered,
+                selectedDate: _selectedDate,
+                selectedTime: _selectedTime,
+                note: _note,
+                onNoteChanged: (note) {
+                  setModalState(() {
+                    _note = note;
+                  });
+                },
+                onDateChanged: (date) {
+                  setModalState(() {
+                    _selectedDate = date;
+                  });
+                },
+                onTimeChanged: (time) {
+                  setModalState(() {
+                    _selectedTime = time;
+                  });
                 },
               ),
-              const Expanded(
-                child: TextField(
-                  autofocus: true,
-                  style: TextStyle(color: AppColors.textColor, fontSize: 18),
-                  decoration: InputDecoration(
-                    hintText: 'Add a task',
-                    hintStyle:
-                        TextStyle(color: AppColors.hintColor, fontSize: 18),
-                    border: InputBorder.none,
-                  ),
-                ),
-              ),
-              const Icon(Icons.check_circle, color: AppColors.primaryColor),
-            ],
-          ),
-          const SizedBox(height: 20),
-          _buildTaskActionRow(),
-        ],
-      ),
-    );
+            );
+          },
+        );
+      },
+    ).whenComplete(() {
+      _taskController.clear();
+      _isTextEntered.value = false;
+      _selectedDate = null;
+      _selectedTime = null;
+      _note = null;
+    });
   }
 
-  // Widget for task action row
-  Widget _buildTaskActionRow() {
-    return Row(
-      children: [
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.notifications_none_rounded,
-              size: 22, color: Color(0xffA7A7A7)),
-        ),
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.note_outlined,
-              size: 22, color: Color(0xffA7A7A7)),
-        ),
-        IconButton(
-          icon: Icon(
-            Icons.calendar_month_rounded,
-            size: 22,
-            color: _selectedDate == null
-                ? const Color(0xffA7A7A7)
-                : AppColors.primaryColor,
-          ),
-          onPressed: () => _showCalendarModal(context),
-        ),
-        if (_selectedDate != null)
-          Text(
-            DateFormat('EEE, dd MMM').format(_selectedDate!),
-            style: const TextStyle(color: AppColors.primaryColor, fontSize: 16),
-          ),
-      ],
-    );
-  }
-
-  // Widget for calendar modal content
-  Widget _buildCalendarModalContent() {
-    return Container(
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(12), topRight: Radius.circular(12)),
-        color: Colors.white,
-      ),
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SfDateRangePicker(
-            onSelectionChanged: _onSelectionChanged,
-            todayHighlightColor: AppColors.primaryColor,
-            selectionColor: AppColors.primaryColor,
-            view: DateRangePickerView.month,
-            selectionMode: DateRangePickerSelectionMode.single,
-            backgroundColor: Colors.white,
-            headerStyle: const DateRangePickerHeaderStyle(
-              backgroundColor: Colors.white,
-              textAlign: TextAlign.center,
-              textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            showNavigationArrow: true,
-            monthViewSettings: const DateRangePickerMonthViewSettings(
-              viewHeaderHeight: 70,
-              viewHeaderStyle: DateRangePickerViewHeaderStyle(
-                textStyle:
-                    TextStyle(fontSize: 16, color: AppColors.primaryColor),
-              ),
-            ),
-            monthCellStyle: DateRangePickerMonthCellStyle(
-              todayTextStyle:
-                  const TextStyle(fontSize: 16, color: AppColors.primaryColor),
-              textStyle:
-                  const TextStyle(fontSize: 16, color: AppColors.textColor),
-              cellDecoration: BoxDecoration(
-                  shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.circular(0)),
-            ),
-          ),
-          const SizedBox(height: 20),
-          _buildCalendarModalButtons(),
-        ],
-      ),
-    );
-  }
-
-  // Widget for calendar modal buttons
-  Widget _buildCalendarModalButtons() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        _buildModalButton('Cancel', Colors.black, () {
-          Navigator.pop(context);
-        }),
-        _buildModalButton('Done', Colors.white, () {
-          Navigator.pop(context);
-        }, backgroundColor: AppColors.primaryColor),
-      ],
-    );
-  }
-
-  // Helper method to create a modal button
-  Widget _buildModalButton(String text, Color textColor, VoidCallback onPressed,
-      {Color backgroundColor = Colors.transparent}) {
-    return Container(
-      width: MediaQuery.of(context).size.width / 2.5,
-      height: 40,
-      decoration: BoxDecoration(
-          color: backgroundColor, borderRadius: BorderRadius.circular(8)),
-      child: TextButton(
-        onPressed: onPressed,
-        child: Text(text, style: TextStyle(color: textColor)),
-      ),
-    );
-  }
-
-  // Main widget build method
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -220,6 +95,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 10),
                 const Text(
@@ -231,53 +107,19 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   onTap: () {
                     Navigator.pushNamed(context, TaskDetailsView.routeName);
                   },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      children: [
-                        Checkbox(
-                          value: false,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(4)),
-                          ),
-                          side: const BorderSide(
-                              color: AppColors.hintColor, width: 1.5),
-                          onChanged: (bool? value) {},
-                        ),
-                        const Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Task 1',
-                              style: TextStyle(color: AppColors.textColor),
-                            ),
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.calendar_month_rounded,
-                                  color: Color(0xffB9B9BE),
-                                  size: 16,
-                                ),
-                                SizedBox(width: 10),
-                                Text(
-                                  'Mon, 12 Jul',
-                                  style: TextStyle(
-                                      color: Color(0xffB9B9BE), fontSize: 12),
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                        const Spacer(),
-                        const Icon(
-                          Icons.star_border_outlined,
-                          color: AppColors.textColor,
-                        ),
-                      ],
-                    ),
+                  child: TaskListItem(
+                    isCompleted: _isCompleted,
+                    isStarred: _isStarred,
+                    onCompletedChanged: (value) {
+                      setState(() {
+                        _isCompleted = value;
+                      });
+                    },
+                    onStarredChanged: (value) {
+                      setState(() {
+                        _isStarred = value;
+                      });
+                    },
                   ),
                 ),
               ],
