@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:to_do_sensor_tracking/presentation/add_task/add_task_screen.dart';
 import '/utils/base_page.dart';
 
 import '/constants/app_colors.dart';
@@ -29,7 +30,13 @@ class TodoListHomeScreen extends StatelessWidget {
             shrinkWrap: true,
             itemCount: 3,
             itemBuilder: (context, index) {
-              return _taskListView('Task List $index', '$index');
+              return _taskListView(
+                'Task List $index',
+                '$index',
+                () {
+                  Navigator.pushNamed(context, AddTaskScreen.routeName);
+                },
+              );
             },
           )
         ],
@@ -37,41 +44,44 @@ class TodoListHomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _taskListView(String title, String taskCount) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
-      color: Colors.white,
-      shadowColor: const Color(0xff575767).withOpacity(0.2),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.list_sharp,
-              color: AppColors.primaryColor,
-              size: 28,
-            ),
-            const SizedBox(width: 10),
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 16,
-                color: AppColors.textColor,
-              ),
-            ),
-            const Spacer(),
-            Text(
-              taskCount,
-              style: const TextStyle(
-                fontSize: 16,
+  Widget _taskListView(String title, String taskCount, final Function() onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        color: Colors.white,
+        shadowColor: const Color(0xff575767).withOpacity(0.2),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Icon(
+                Icons.list_sharp,
                 color: AppColors.primaryColor,
+                size: 28,
               ),
-            ),
-          ],
+              const SizedBox(width: 10),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: AppColors.textColor,
+                ),
+              ),
+              const Spacer(),
+              Text(
+                taskCount,
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: AppColors.primaryColor,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
