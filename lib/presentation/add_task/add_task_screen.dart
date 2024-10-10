@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:to_do_sensor_tracking/presentation/add_task/task_details_view.dart';
 import '/constants/app_colors.dart';
 import '/utils/base_page.dart';
 
@@ -213,16 +214,72 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        const BasePage(
+        BasePage(
           showAppBar: true,
           appBarTitle: 'Lists',
           child: Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                SizedBox(height: 10),
-                Text('List Task (0)',
-                    style: TextStyle(fontSize: 20, color: AppColors.textColor)),
+                const SizedBox(height: 10),
+                const Text(
+                  'List Task (0)',
+                  style: TextStyle(fontSize: 20, color: AppColors.textColor),
+                ),
+                const SizedBox(height: 20),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, TaskDetailsView.routeName);
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      children: [
+                        Checkbox(
+                          value: false,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(4)),
+                          ),
+                          side: const BorderSide(
+                              color: AppColors.hintColor, width: 1.5),
+                          onChanged: (bool? value) {},
+                        ),
+                        const Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Task 1',
+                              style: TextStyle(color: AppColors.textColor),
+                            ),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.calendar_month_rounded,
+                                  color: Color(0xffB9B9BE),
+                                  size: 16,
+                                ),
+                                SizedBox(width: 10),
+                                Text(
+                                  'Mon, 12 Jul',
+                                  style: TextStyle(
+                                      color: Color(0xffB9B9BE), fontSize: 12),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                        const Spacer(),
+                        const Icon(
+                          Icons.star_border_outlined,
+                          color: AppColors.textColor,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
