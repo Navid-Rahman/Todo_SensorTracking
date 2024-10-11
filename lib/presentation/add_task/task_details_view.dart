@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../../constants/app_colors.dart';
 import '/utils/base_page.dart';
+import '/data/task_data_store.dart';
+import '/models/task.dart';
 
 class TaskDetailsView extends StatelessWidget {
   const TaskDetailsView({super.key});
@@ -19,9 +22,15 @@ class TaskDetailsView extends StatelessWidget {
     final TimeOfDay? taskDueTime = taskDetails['taskDueTime'];
     final bool isCompleted = taskDetails['isCompleted'] ?? false;
     final bool isStarred = taskDetails['isStarred'] ?? false;
+    final TaskDataStore taskDataStore = TaskDataStore();
 
-    print('Task Date: $taskDueDate');
-
+    print('Task ID: $taskId');
+    print('Task Title: $taskTitle');
+    print('Task Note: $taskNote');
+    print('Task Due Date: $taskDueDate');
+    print('Task Due Time: $taskDueTime');
+    print('Is Completed: $isCompleted');
+    print('Is Starred: $isStarred');
     return Stack(
       children: [
         BasePage(
@@ -63,7 +72,42 @@ class TaskDetailsView extends StatelessWidget {
           bottom: 40,
           left: 12,
           child: MaterialButton(
-            onPressed: () {},
+            onPressed: () {
+              /// Show delete confirmation dialog
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    backgroundColor: Colors.white,
+                    title: const Text('Delete Task',
+                        style: TextStyle(color: AppColors.textColor)),
+                    content: const Text(
+                        'Are you sure you want to delete this task?',
+                        style: TextStyle(color: AppColors.textColor)),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Cancel',
+                            style: TextStyle(
+                              color: AppColors.textColor,
+                            )),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          await taskDataStore.deleteTask(id: taskId);
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Delete',
+                            style: TextStyle(color: Colors.red)),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
             child: const Row(
               children: [
                 Icon(

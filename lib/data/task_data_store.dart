@@ -39,10 +39,9 @@ class TaskDataStore {
   }
 
   /// Delete Task
-  Future<void> deleteTask({required Task task}) async {
-    print('Task Deleted : ${task.id}');
-
-    await task.delete();
+  Future<void> deleteTask({required String id}) async {
+    print('Task Deleted : $id');
+    await box.delete(id);
   }
 
   /// Get all tasks
