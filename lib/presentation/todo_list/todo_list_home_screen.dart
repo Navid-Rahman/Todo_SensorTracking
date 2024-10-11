@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import '../../models/task.dart';
 import '/models/task_list.dart';
 import '../add_list_title.dart';
 import '../add_task/add_task_screen.dart';
-
 import '/data/task_list_data_store.dart';
+import '/data/task_data_store.dart';
 import '/utils/base_page.dart';
-
 import '/constants/app_colors.dart';
 
 class TodoListHomeScreen extends StatefulWidget {
@@ -20,6 +20,7 @@ class TodoListHomeScreen extends StatefulWidget {
 
 class _TodoListHomeScreenState extends State<TodoListHomeScreen> {
   late Box<TaskList> _taskListsBox;
+  final TaskDataStore _taskDataStore = TaskDataStore();
 
   @override
   void initState() {
@@ -60,20 +61,23 @@ class _TodoListHomeScreenState extends State<TodoListHomeScreen> {
                   itemCount: box.values.length,
                   itemBuilder: (context, index) {
                     TaskList taskList = box.getAt(index)!;
-                    return _taskListView(
-                      taskList.title,
-                      // '${taskList.tasks.length}',
-                      '1',
-                      () {
-                        print(taskList.title);
-                        print(taskList.id);
-
-                        Navigator.pushNamed(
-                          context,
-                          AddTaskScreen.routeName,
-                          arguments: {
-                            'taskListId': taskList.id,
-                            'taskTitle': taskList.title,
+                    return ValueListenableBuilder(
+                      valueListenable: _taskDataStore.listenToTasks(),
+                      builder: (context, Box<Task> taskBox, _) {
+                        int taskCount = _taskDataStore
+                            .getTaskCountByTaskListId(taskList.id);
+                        return _taskListView(
+                          taskList.title,
+                          taskCount.toString(),
+                          () {
+                            Navigator.pushNamed(
+                              context,
+                              AddTaskScreen.routeName,
+                              arguments: {
+                                'taskListId': taskList.id,
+                                'taskTitle': taskList.title,
+                              },
+                            );
                           },
                         );
                       },

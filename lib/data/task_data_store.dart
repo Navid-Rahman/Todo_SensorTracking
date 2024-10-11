@@ -26,6 +26,11 @@ class TaskDataStore {
     return box.length;
   }
 
+  /// Get Task Count by TaskListId
+  int getTaskCountByTaskListId(String taskListId) {
+    return box.values.where((task) => task.taskListId == taskListId).length;
+  }
+
   /// Update Task
   Future<void> updateTask({required Task task}) async {
     print('Task Updated : ${task.id}');
