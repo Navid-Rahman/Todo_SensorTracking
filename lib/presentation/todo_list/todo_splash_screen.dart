@@ -25,6 +25,7 @@ class _TodoSplashScreenState extends State<TodoSplashScreen> {
   @override
   Widget build(BuildContext context) {
     return BasePage(
+      backgroundColor: Colors.white,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

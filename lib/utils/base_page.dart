@@ -8,6 +8,7 @@ class BasePage extends StatelessWidget {
   final bool? showAppBar;
   final String? appBarTitle;
   final bool showBackButton;
+  final Color backgroundColor;
 
   const BasePage({
     required this.child,
@@ -17,6 +18,7 @@ class BasePage extends StatelessWidget {
     this.showAppBar = false,
     this.appBarTitle,
     this.showBackButton = false,
+    this.backgroundColor = AppColors.scaffoldColor,
   });
 
   @override
@@ -45,7 +47,7 @@ class BasePage extends StatelessWidget {
               : null,
           floatingActionButton: floatingActionButton,
           floatingActionButtonLocation: floatingActionButtonLocation,
-          backgroundColor: AppColors.scaffoldColor,
+          backgroundColor: backgroundColor,
           body: Padding(
             padding: const EdgeInsets.all(12.0),
             child: child,
