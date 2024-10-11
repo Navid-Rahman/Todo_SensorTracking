@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import '../../main.dart';
 import '/data/task_data_store.dart';
 import '/models/task.dart';
 import 'task_details_view.dart';
@@ -129,6 +130,22 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     );
 
     await _taskDataStore.addTask(task: newTask);
+
+    if (_selectedDate != null && _selectedTime != null) {
+      final scheduledDate = DateTime(
+        _selectedDate!.year,
+        _selectedDate!.month,
+        _selectedDate!.day,
+        _selectedTime!.hour,
+        _selectedTime!.minute,
+      );
+
+      localNotification.showNotification(
+        id: newTask.id.hashCode,
+        title: 'Task Reminder',
+        body: 'Don\'t forget to complete your task: ${newTask.title}',
+      );
+    }
 
     Navigator.pop(context);
 
