@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:to_do_sensor_tracking/data/task_list_data_store.dart';
 import 'package:to_do_sensor_tracking/models/task_list.dart';
 import 'package:to_do_sensor_tracking/utils/base_page.dart';
 
@@ -15,6 +16,8 @@ class AddListTitle extends StatefulWidget {
 class _AddListTitleState extends State<AddListTitle> {
   final TextEditingController _titleController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
+
+  final TaskListDataStore _taskListDataStore = TaskListDataStore();
 
   @override
   void initState() {
@@ -36,9 +39,8 @@ class _AddListTitleState extends State<AddListTitle> {
 
   void _saveTitle(String title) async {
     if (title.isNotEmpty) {
-      var box = await Hive.openBox<TaskList>('taskLists');
       var taskList = TaskList.create(title: title);
-      await box.add(taskList);
+      await _taskListDataStore.addTaskList(taskList: taskList);
 
       print('Title saved: $title');
       print('TaskList saved: $taskList');
