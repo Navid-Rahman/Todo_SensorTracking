@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:to_do_sensor_tracking/utils/base_page.dart';
+import 'package:intl/intl.dart';
+import '/utils/base_page.dart';
 
 class TaskDetailsView extends StatelessWidget {
   const TaskDetailsView({super.key});
@@ -11,12 +12,15 @@ class TaskDetailsView extends StatelessWidget {
     final taskDetails =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
 
+    final String taskId = taskDetails['taskId'];
     final String taskTitle = taskDetails['taskTitle'] ?? 'No Title';
     final String? taskNote = taskDetails['taskNote'];
     final DateTime? taskDueDate = taskDetails['taskDueDate'];
     final TimeOfDay? taskDueTime = taskDetails['taskDueTime'];
     final bool isCompleted = taskDetails['isCompleted'] ?? false;
     final bool isStarred = taskDetails['isStarred'] ?? false;
+
+    print('Task Date: $taskDueDate');
 
     return Stack(
       children: [
@@ -39,8 +43,9 @@ class TaskDetailsView extends StatelessWidget {
                 buildTaskDetailRow(
                   icon: Icons.calendar_today_rounded,
                   color: getDueDateColor(taskDueDate, taskDueTime),
-                  text:
-                      taskDueDate != null ? taskDueDate.toString() : 'Due Date',
+                  text: taskDueDate != null
+                      ? 'Due ${DateFormat('EEE, dd MMM').format(taskDueDate)}'
+                      : 'Due Date',
                 ),
                 const SizedBox(height: 20),
                 buildTaskDetailRow(
@@ -85,12 +90,15 @@ class TaskDetailsView extends StatelessWidget {
     required Color color,
     required String text,
   }) {
-    return Row(
-      children: [
-        Icon(icon, size: 24, color: color),
-        const SizedBox(width: 8),
-        Text(text, style: TextStyle(fontSize: 16, color: color)),
-      ],
+    return GestureDetector(
+      onTap: () {},
+      child: Row(
+        children: [
+          Icon(icon, size: 24, color: color),
+          const SizedBox(width: 8),
+          Text(text, style: TextStyle(fontSize: 16, color: color)),
+        ],
+      ),
     );
   }
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:to_do_sensor_tracking/data/task_data_store.dart';
-import '../../models/task.dart';
+import '/data/task_data_store.dart';
+import '/models/task.dart';
 import 'task_details_view.dart';
 import 'widgets/add_task_modal.dart';
 import 'widgets/task_list_item.dart';
@@ -155,26 +155,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       const TextStyle(fontSize: 20, color: AppColors.textColor),
                 ),
                 const SizedBox(height: 20),
-                // GestureDetector(
-                //   onTap: () {
-                //     Navigator.pushNamed(context, TaskDetailsView.routeName);
-                //   },
-                //   child: TaskListItem(
-                //     isCompleted: _isCompleted,
-                //     isStarred: _isStarred,
-                //     onCompletedChanged: (value) {
-                //       setState(() {
-                //         _isCompleted = value;
-                //       });
-                //     },
-                //     onStarredChanged: (value) {
-                //       setState(() {
-                //         _isStarred = value;
-                //       });
-                //     },
-                //   ),
-                // ),
-
                 ValueListenableBuilder(
                   valueListenable: _taskDataStore.listenToTasks(),
                   builder: (context, Box<Task> box, _) {
