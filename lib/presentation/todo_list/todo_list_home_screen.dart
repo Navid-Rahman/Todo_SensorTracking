@@ -45,7 +45,18 @@ class _TodoListHomeScreenState extends State<TodoListHomeScreen> {
       child: Column(
         children: [
           const SizedBox(height: 30),
-          _topHeaderContainer(5, 6),
+          ValueListenableBuilder(
+            valueListenable: _taskDataStore.listenToTasks(),
+            builder: (context, Box<Task> taskBox, _) {
+              final tasks = _taskDataStore.getAllTasks();
+              final incompleteCount =
+                  tasks.where((task) => !task.isCompleted).length;
+              final completedCount =
+                  tasks.where((task) => task.isCompleted).length;
+
+              return _topHeaderContainer(incompleteCount, completedCount);
+            },
+          ),
           const Divider(color: Color(0xffCFCFCF)),
           Expanded(
             child: ValueListenableBuilder(

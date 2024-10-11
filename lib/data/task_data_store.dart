@@ -45,6 +45,11 @@ class TaskDataStore {
     await task.delete();
   }
 
+  /// Get all tasks
+  List<Task> getAllTasks() {
+    return box.values.toList();
+  }
+
   ValueListenable<Box<Task>> listenToTasks() {
     return box.listenable();
   }
