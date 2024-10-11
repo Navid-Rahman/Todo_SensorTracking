@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:to_do_sensor_tracking/presentation/add_task/add_task_screen.dart';
 import '../../constants/app_colors.dart';
 import '/utils/base_page.dart';
 import '/data/task_data_store.dart';
@@ -99,6 +100,35 @@ class TaskDetailsView extends StatelessWidget {
                           await taskDataStore.deleteTask(id: taskId);
                           Navigator.pop(context);
                           Navigator.pop(context);
+
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                backgroundColor: Colors.white,
+                                title: const Text('Task Deleted',
+                                    style:
+                                        TextStyle(color: AppColors.textColor)),
+                                content: const Text(
+                                    'The task has been successfully deleted.',
+                                    style:
+                                        TextStyle(color: AppColors.textColor)),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text(
+                                      'OK',
+                                      style: TextStyle(
+                                        color: AppColors.primaryColor,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
                         },
                         child: const Text('Delete',
                             style: TextStyle(color: Colors.red)),
