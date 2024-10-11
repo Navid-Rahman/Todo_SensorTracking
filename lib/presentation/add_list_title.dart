@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:to_do_sensor_tracking/models/task_list.dart';
 import 'package:to_do_sensor_tracking/utils/base_page.dart';
 
 class AddListTitle extends StatefulWidget {
@@ -32,9 +34,15 @@ class _AddListTitleState extends State<AddListTitle> {
     super.dispose();
   }
 
-  void _saveTitle(String title) {
-    // Implement your save logic here
-    print('Title saved: $title');
+  void _saveTitle(String title) async {
+    if (title.isNotEmpty) {
+      var box = await Hive.openBox<TaskList>('taskLists');
+      var taskList = TaskList.create(title: title);
+      await box.add(taskList);
+
+      print('Title saved: $title');
+      print('TaskList saved: $taskList');
+    }
   }
 
   @override

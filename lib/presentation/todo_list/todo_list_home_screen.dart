@@ -1,13 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:to_do_sensor_tracking/presentation/add_task/add_task_screen.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import '/models/task_list.dart';
+import '../add_list_title.dart';
+import '../add_task/add_task_screen.dart';
+
+import '/data/task_list_data_store.dart';
 import '/utils/base_page.dart';
 
 import '/constants/app_colors.dart';
 
-class TodoListHomeScreen extends StatelessWidget {
+class TodoListHomeScreen extends StatefulWidget {
   const TodoListHomeScreen({super.key});
 
   static const String routeName = 'todo_list_home';
+
+  @override
+  State<TodoListHomeScreen> createState() => _TodoListHomeScreenState();
+}
+
+class _TodoListHomeScreenState extends State<TodoListHomeScreen> {
+  late Box<TaskList> _taskListsBox;
+
+  @override
+  void initState() {
+    super.initState();
+    _taskListsBox = Hive.box<TaskList>(TaskListDataStore.boxName);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +35,9 @@ class TodoListHomeScreen extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(50),
         ),
-        onPressed: null,
+        onPressed: () {
+          Navigator.pushNamed(context, AddListTitle.routeName);
+        },
         child: const Icon(Icons.add, color: Colors.white, size: 32),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -26,19 +46,43 @@ class TodoListHomeScreen extends StatelessWidget {
           const SizedBox(height: 30),
           _topHeaderContainer(5, 6),
           const Divider(color: Color(0xffCFCFCF)),
-          ListView.builder(
-            shrinkWrap: true,
-            itemCount: 3,
-            itemBuilder: (context, index) {
-              return _taskListView(
-                'Task List $index',
-                '$index',
-                () {
-                  Navigator.pushNamed(context, AddTaskScreen.routeName);
-                },
-              );
-            },
-          )
+          Expanded(
+            child: ValueListenableBuilder(
+              valueListenable: _taskListsBox.listenable(),
+              builder: (context, Box<TaskList> box, _) {
+                if (box.values.isEmpty) {
+                  return const Center(
+                    child: Text('No task lists available'),
+                  );
+                }
+
+                return ListView.builder(
+                  itemCount: box.values.length,
+                  itemBuilder: (context, index) {
+                    TaskList taskList = box.getAt(index)!;
+                    return _taskListView(
+                      taskList.title,
+                      // '${taskList.tasks.length}',
+                      '1',
+                      () {
+                        print(taskList.title);
+                        print(taskList.id);
+
+                        Navigator.pushNamed(
+                          context,
+                          AddTaskScreen.routeName,
+                          arguments: {
+                            'taskListId': taskList.id,
+                            'taskTitle': taskList.title,
+                          },
+                        );
+                      },
+                    );
+                  },
+                );
+              },
+            ),
+          ),
         ],
       ),
     );

@@ -13,6 +13,7 @@ class AddTaskModal extends StatelessWidget {
   final ValueChanged<String> onNoteChanged;
   final ValueChanged<DateTime?> onDateChanged;
   final ValueChanged<TimeOfDay?> onTimeChanged;
+  final VoidCallback onSaveTask;
 
   const AddTaskModal({
     super.key,
@@ -24,6 +25,7 @@ class AddTaskModal extends StatelessWidget {
     required this.onNoteChanged,
     required this.onDateChanged,
     required this.onTimeChanged,
+    required this.onSaveTask,
   });
 
   @override
@@ -65,11 +67,14 @@ class AddTaskModal extends StatelessWidget {
               ValueListenableBuilder<bool>(
                 valueListenable: isTextEntered,
                 builder: (context, isTextEntered, child) {
-                  return Icon(
-                    Icons.check_circle,
-                    color: isTextEntered
-                        ? AppColors.primaryColor
-                        : AppColors.hintColor,
+                  return GestureDetector(
+                    onTap: isTextEntered ? onSaveTask : null,
+                    child: Icon(
+                      Icons.check_circle,
+                      color: isTextEntered
+                          ? AppColors.primaryColor
+                          : AppColors.hintColor,
+                    ),
                   );
                 },
               ),
