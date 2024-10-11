@@ -8,68 +8,47 @@ class TaskDetailsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final taskDetails =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+
+    final String taskTitle = taskDetails['taskTitle'] ?? 'No Title';
+    final String? taskNote = taskDetails['taskNote'];
+    final DateTime? taskDueDate = taskDetails['taskDueDate'];
+    final TimeOfDay? taskDueTime = taskDetails['taskDueTime'];
+    final bool isCompleted = taskDetails['isCompleted'] ?? false;
+    final bool isStarred = taskDetails['isStarred'] ?? false;
+
     return Stack(
       children: [
-        const BasePage(
+        BasePage(
           showAppBar: true,
           showBackButton: true,
-          appBarTitle: 'Task 1',
+          appBarTitle: taskTitle,
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 18),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
             child: Column(
               children: [
-                Row(
-                  children: [
-                    Icon(
-                      Icons.notifications_none_rounded,
-                      color: Color(0xffA7A7A7),
-                      size: 24,
-                    ),
-                    SizedBox(width: 8),
-                    Text(
-                      'Remind me',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Color(0xffA7A7A7),
-                      ),
-                    ),
-                  ],
+                buildTaskDetailRow(
+                  icon: Icons.notifications_none_rounded,
+                  color: getDueDateColor(taskDueDate, taskDueTime),
+                  text: taskDueTime != null
+                      ? taskDueTime.format(context)
+                      : 'Remind Me',
                 ),
-                SizedBox(height: 16),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.calendar_today_rounded,
-                      color: Color(0xffA7A7A7),
-                      size: 24,
-                    ),
-                    SizedBox(width: 8),
-                    Text(
-                      'Due date',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Color(0xffA7A7A7),
-                      ),
-                    ),
-                  ],
+                const SizedBox(height: 20),
+                buildTaskDetailRow(
+                  icon: Icons.calendar_today_rounded,
+                  color: getDueDateColor(taskDueDate, taskDueTime),
+                  text:
+                      taskDueDate != null ? taskDueDate.toString() : 'Due Date',
                 ),
-                SizedBox(height: 16),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.note_outlined,
-                      size: 24,
-                      color: Color(0xffA7A7A7),
-                    ),
-                    SizedBox(width: 8),
-                    Text(
-                      'Priority',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Color(0xffA7A7A7),
-                      ),
-                    ),
-                  ],
+                const SizedBox(height: 20),
+                buildTaskDetailRow(
+                  icon: Icons.note_outlined,
+                  color: taskNote != null
+                      ? const Color(0xff33CCCC)
+                      : const Color(0xffA7A7A7),
+                  text: taskNote ?? 'Add Note',
                 ),
               ],
             ),
@@ -99,5 +78,25 @@ class TaskDetailsView extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  Widget buildTaskDetailRow({
+    required IconData icon,
+    required Color color,
+    required String text,
+  }) {
+    return Row(
+      children: [
+        Icon(icon, size: 24, color: color),
+        const SizedBox(width: 8),
+        Text(text, style: TextStyle(fontSize: 16, color: color)),
+      ],
+    );
+  }
+
+  Color getDueDateColor(DateTime? dueDate, TimeOfDay? dueTime) {
+    return dueDate != null || dueTime != null
+        ? const Color(0xff33CCCC)
+        : const Color(0xffA7A7A7);
   }
 }

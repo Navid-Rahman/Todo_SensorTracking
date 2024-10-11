@@ -23,12 +23,13 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   TimeOfDay? _selectedTime;
   String? _note;
 
-  bool _isStarred = false;
-  bool _isCompleted = false;
+  final bool _isStarred = false;
+  final bool _isCompleted = false;
   final TextEditingController _taskController = TextEditingController();
   final ValueNotifier<bool> _isTextEntered = ValueNotifier<bool>(false);
 
-  late Box<Task> _taskBox;
+  final TaskDataStore _taskDataStore = TaskDataStore();
+
   late String _taskListId;
   late String _taskTitle;
 
@@ -38,8 +39,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     _taskController.addListener(() {
       _isTextEntered.value = _taskController.text.isNotEmpty;
     });
-
-    _taskBox = Hive.box<Task>(TaskDataStore.boxName);
   }
 
   @override
@@ -108,7 +107,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     });
   }
 
-  void _saveTask() {
+  void _saveTask() async {
     print('Starting to save task');
     print('Task title: ${_taskController.text}');
     print('Task note: $_note');
@@ -118,7 +117,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     print('Task is starred: $_isStarred');
     print('Task list id: $_taskListId');
     print('Task list title: $_taskTitle');
-    print('Task box: $_taskBox');
 
     final newTask = Task.create(
       taskListId: _taskListId,
@@ -129,12 +127,13 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       isCompleted: _isCompleted,
       isStarred: _isStarred,
     );
-    _taskBox.add(newTask);
+
+    await _taskDataStore.addTask(task: newTask);
 
     Navigator.pop(context);
 
     print('Task added: ${newTask.id}');
-    print('Task count: ${_taskBox.length}');
+    print('Task count: ${_taskDataStore.getTaskCount()}');
   }
 
   @override
@@ -177,7 +176,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 // ),
 
                 ValueListenableBuilder(
-                  valueListenable: _taskBox.listenable(),
+                  valueListenable: _taskDataStore.listenToTasks(),
                   builder: (context, Box<Task> box, _) {
                     final tasks = box.values
                         .where((task) => task.taskListId == _taskListId)
@@ -209,6 +208,21 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                               task.isStarred = value;
                               task.save();
                             });
+                          },
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              TaskDetailsView.routeName,
+                              arguments: {
+                                'taskId': task.id,
+                                'taskTitle': task.title,
+                                'taskNote': task.description,
+                                'taskDueDate': task.dueDate,
+                                'taskDueTime': task.dueTime,
+                                'isCompleted': task.isCompleted,
+                                'isStarred': task.isStarred,
+                              },
+                            );
                           },
                         );
                       },
