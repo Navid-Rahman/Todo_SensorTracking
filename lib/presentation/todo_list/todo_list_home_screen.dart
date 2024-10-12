@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:to_do_sensor_tracking/constants/assets.dart';
 
 import '../add_task/add_task_screen.dart';
 
@@ -121,10 +123,16 @@ class _TodoListHomeScreenState extends State<TodoListHomeScreen> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Icon(
-                Icons.list_sharp,
-                color: AppColors.primaryColor,
-                size: 28,
+              // const Icon(
+              //   Icons.list_sharp,
+              //   color: AppColors.primaryColor,
+              //   size: 28,
+              // ),
+
+              SvgPicture.asset(
+                Assets.taskTitleIcon,
+                width: 28,
+                height: 28,
               ),
               const SizedBox(width: 10),
               Text(
@@ -207,10 +215,16 @@ class _TodoListHomeScreenState extends State<TodoListHomeScreen> {
               ],
             ),
             const Spacer(),
-            const Icon(
-              Icons.search,
-              color: Colors.black,
-              size: 40,
+            // const Icon(
+            //   Icons.search,
+            //   color: Colors.black,
+            //   size: 40,
+            // ),
+
+            SvgPicture.asset(
+              Assets.searchIcon,
+              width: 28,
+              height: 28,
             ),
           ],
         ),

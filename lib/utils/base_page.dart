@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:to_do_sensor_tracking/constants/app_colors.dart';
+import 'package:to_do_sensor_tracking/constants/assets.dart';
 
 class BasePage extends StatelessWidget {
   final Widget child;
@@ -37,7 +39,7 @@ class BasePage extends StatelessWidget {
                   backgroundColor: AppColors.scaffoldColor,
                   leading: showBackButton
                       ? IconButton(
-                          icon: const Icon(Icons.arrow_back),
+                          icon: SvgPicture.asset(Assets.backButton),
                           onPressed: () {
                             Navigator.pop(context);
                           },

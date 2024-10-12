@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:timezone/timezone.dart' as tz;
 
+import '../../constants/assets.dart';
 import '/constants/app_colors.dart';
 import '/data/task_data_store.dart';
 import '/main.dart';
@@ -239,18 +241,20 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               ),
             ),
             onPressed: () => _showAddTaskModal(context),
-            child: const Padding(
+            child: Padding(
               padding: EdgeInsets.symmetric(vertical: 12.0),
               child: Row(
                 children: [
-                  CircleAvatar(
-                    backgroundColor: AppColors.primaryColor,
-                    radius: 14,
-                    child: Icon(Icons.add, color: Colors.white, size: 24),
+                  SvgPicture.asset(
+                    Assets.addTaskIcon,
+                    width: 32,
+                    height: 32,
                   ),
                   SizedBox(width: 10),
-                  Text('Add a Task',
-                      style: TextStyle(color: AppColors.textColor)),
+                  Text(
+                    'Add a Task',
+                    style: TextStyle(color: AppColors.textColor),
+                  ),
                 ],
               ),
             ),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:intl/intl.dart';
 
+import '/constants/assets.dart';
 import '/constants/app_colors.dart';
 import 'calendar_modal_content.dart';
 
@@ -49,12 +51,13 @@ class TaskActionRow extends StatelessWidget {
               onTimeChanged(pickedTime);
             }
           },
-          icon: Icon(
-            Icons.notifications_none_rounded,
-            size: 22,
-            color: selectedTime == null
-                ? const Color(0xffA7A7A7)
-                : AppColors.primaryColor,
+          icon: SvgPicture.asset(
+            Assets.reminderIcon,
+            colorFilter: selectedTime == null
+                ? const ColorFilter.mode(Color(0xffA7A7A7), BlendMode.srcIn)
+                : ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn),
+            height: 22,
+            width: 22,
           ),
         ),
         if (selectedTime != null)
@@ -65,19 +68,24 @@ class TaskActionRow extends StatelessWidget {
         if (note == null)
           IconButton(
             onPressed: () => _showAddNoteDialog(context),
-            icon: const Icon(
-              Icons.note_outlined,
-              size: 22,
-              color: Color(0xffA7A7A7),
+            icon: SvgPicture.asset(
+              Assets.noteIcon,
+              colorFilter: const ColorFilter.mode(
+                Color(0xffA7A7A7),
+                BlendMode.srcIn,
+              ),
+              height: 22,
+              width: 22,
             ),
           ),
         IconButton(
-          icon: Icon(
-            Icons.calendar_month_rounded,
-            size: 22,
-            color: selectedDate == null
-                ? const Color(0xffA7A7A7)
-                : AppColors.primaryColor,
+          icon: SvgPicture.asset(
+            Assets.calendarIcon,
+            colorFilter: selectedDate == null
+                ? const ColorFilter.mode(Color(0xffA7A7A7), BlendMode.srcIn)
+                : ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn),
+            height: 22,
+            width: 22,
           ),
           onPressed: () => _showCalendarModal(context),
         ),

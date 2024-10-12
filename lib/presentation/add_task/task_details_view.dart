@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:intl/intl.dart';
+import 'package:to_do_sensor_tracking/constants/assets.dart';
 
 import '/constants/app_colors.dart';
 import '/data/task_data_store.dart';
@@ -36,7 +38,7 @@ class TaskDetailsView extends StatelessWidget {
             child: Column(
               children: [
                 buildTaskDetailRow(
-                  icon: Icons.notifications_none_rounded,
+                  icon: Assets.reminderIcon,
                   color: getDueDateColor(taskDueDate, taskDueTime),
                   text: taskDueTime != null
                       ? taskDueTime.format(context)
@@ -44,7 +46,7 @@ class TaskDetailsView extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 buildTaskDetailRow(
-                  icon: Icons.calendar_today_rounded,
+                  icon: Assets.calendarIcon,
                   color: getDueDateColor(taskDueDate, taskDueTime),
                   text: taskDueDate != null
                       ? 'Due ${DateFormat('EEE, dd MMM').format(taskDueDate)}'
@@ -52,7 +54,7 @@ class TaskDetailsView extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 buildTaskDetailRow(
-                  icon: Icons.note_outlined,
+                  icon: Assets.noteIcon,
                   color: taskNote != null
                       ? const Color(0xff33CCCC)
                       : const Color(0xffA7A7A7),
@@ -131,11 +133,20 @@ class TaskDetailsView extends StatelessWidget {
                 },
               );
             },
-            child: const Row(
+            child: Row(
               children: [
-                Icon(
-                  Icons.delete_outline,
-                  color: Colors.red,
+                // Icon(
+                //   Icons.delete_outline,
+                //   color: Colors.red,
+                // ),
+                SvgPicture.asset(
+                  Assets.deleteIcon,
+                  colorFilter: const ColorFilter.mode(
+                    Colors.red,
+                    BlendMode.srcIn,
+                  ),
+                  width: 22,
+                  height: 22,
                 ),
                 SizedBox(width: 8),
                 Text(
@@ -153,7 +164,7 @@ class TaskDetailsView extends StatelessWidget {
   }
 
   Widget buildTaskDetailRow({
-    required IconData icon,
+    required String icon,
     required Color color,
     required String text,
   }) {
@@ -161,7 +172,12 @@ class TaskDetailsView extends StatelessWidget {
       onTap: () {},
       child: Row(
         children: [
-          Icon(icon, size: 24, color: color),
+          SvgPicture.asset(
+            icon,
+            colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+            height: 22,
+            width: 22,
+          ),
           const SizedBox(width: 8),
           Text(text, style: TextStyle(fontSize: 16, color: color)),
         ],

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
+import '../../../constants/assets.dart';
 import '/constants/app_colors.dart';
 import 'task_action_row.dart';
 
@@ -93,10 +95,14 @@ class AddTaskModal extends StatelessWidget {
               if (note != null) ...[
                 IconButton(
                   onPressed: () => _showAddNoteDialog(context),
-                  icon: const Icon(
-                    Icons.note_outlined,
-                    size: 22,
-                    color: AppColors.primaryColor,
+                  icon: SvgPicture.asset(
+                    Assets.noteIcon,
+                    height: 22,
+                    width: 22,
+                    colorFilter: const ColorFilter.mode(
+                      AppColors.primaryColor,
+                      BlendMode.srcIn,
+                    ),
                   ),
                 ),
                 Padding(

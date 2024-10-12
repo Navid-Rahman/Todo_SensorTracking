@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
+import '../../../constants/assets.dart';
 import '/constants/app_colors.dart';
 
 class TaskListItem extends StatelessWidget {
@@ -65,16 +67,21 @@ class TaskListItem extends StatelessWidget {
                           : TextDecoration.none,
                     ),
                   ),
+                  const SizedBox(height: 4),
                   if (dueDate != null || dueTime != null)
                     Row(
                       children: [
                         if (dueDate != null) ...[
-                          const Icon(
-                            Icons.calendar_month_rounded,
-                            color: Color(0xffB9B9BE),
-                            size: 16,
+                          SvgPicture.asset(
+                            Assets.calendarIcon,
+                            width: 16,
+                            height: 16,
+                            colorFilter: ColorFilter.mode(
+                              const Color(0xffB9B9BE),
+                              BlendMode.srcIn,
+                            ),
                           ),
-                          const SizedBox(width: 10),
+                          const SizedBox(width: 4),
                           Text(
                             '${dueDate!.day}/${dueDate!.month}/${dueDate!.year}',
                             style: const TextStyle(
@@ -85,12 +92,16 @@ class TaskListItem extends StatelessWidget {
                           const SizedBox(width: 16),
                         ],
                         if (dueTime != null) ...[
-                          const Icon(
-                            Icons.notifications,
-                            color: Color(0xffB9B9BE),
-                            size: 16,
+                          SvgPicture.asset(
+                            Assets.reminderIcon,
+                            width: 16,
+                            height: 16,
+                            colorFilter: ColorFilter.mode(
+                              const Color(0xffB9B9BE),
+                              BlendMode.srcIn,
+                            ),
                           ),
-                          const SizedBox(width: 10),
+                          const SizedBox(width: 4),
                           Text(
                             dueTime != null
                                 ? '${dueTime!.hour}:${dueTime!.minute}'
@@ -107,10 +118,16 @@ class TaskListItem extends StatelessWidget {
               ),
               const Spacer(),
               IconButton(
-                icon: Icon(
-                  isStarred ? Icons.star : Icons.star_border_outlined,
-                  color:
-                      isStarred ? AppColors.starredColor : AppColors.hintColor,
+                icon: SvgPicture.asset(
+                  Assets.starIcon,
+                  colorFilter: ColorFilter.mode(
+                    isStarred
+                        ? AppColors.starredColor
+                        : const Color(0xffA7A7A7),
+                    BlendMode.srcIn,
+                  ),
+                  width: 30,
+                  height: 30,
                 ),
                 onPressed: () {
                   onStarredChanged(!isStarred);
