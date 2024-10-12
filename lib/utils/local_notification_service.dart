@@ -103,21 +103,31 @@ class LocalNotification {
       await setupFlutterNotifications();
     }
 
+    final tz.TZDateTime scheduledNotificationDate =
+        tz.TZDateTime.from(scheduledDate, tz.local);
+
+    print('Current time: ${tz.TZDateTime.now(tz.local)}');
+    print('Scheduled notification date: $scheduledNotificationDate');
+
+    if (scheduledNotificationDate.isBefore(tz.TZDateTime.now(tz.local))) {
+      print('Error: Scheduled date must be in the future.');
+      return;
+    }
+
     try {
-      flutterLocalNotificationsPlugin.zonedSchedule(
+      await flutterLocalNotificationsPlugin.zonedSchedule(
         id,
         title,
         body,
-        tz.TZDateTime.from(scheduledDate, tz.local),
+        scheduledNotificationDate,
         notificationDetails,
-        androidAllowWhileIdle: true, // Allow while the device is in idle state
+        androidAllowWhileIdle: true,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
       );
+      print('Notification scheduled successfully.');
     } catch (e) {
-      if (kDebugMode) {
-        print('Error scheduling notification: $e');
-      }
+      print('Error scheduling notification: $e');
     }
   }
 }

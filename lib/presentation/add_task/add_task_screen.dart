@@ -150,15 +150,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       if (scheduledNotificationDate.isAfter(tz.TZDateTime.now(tz.local))) {
         print('Scheduling notification...');
         try {
-          localNotification.showNotification(
-            id: newTask.id.hashCode,
-            title: _taskController.text,
-            body: 'Don\'t forget to complete your task: ${newTask.title}',
-          );
-
           localNotification.scheduleNotification(
             id: newTask.id.hashCode,
-            title: _taskController.text,
+            title: 'Task Reminder',
             body: 'Don\'t forget to complete your task: ${newTask.title}',
             scheduledDate: scheduledNotificationDate,
           );
