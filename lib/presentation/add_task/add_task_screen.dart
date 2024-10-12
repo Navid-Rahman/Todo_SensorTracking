@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:timezone/timezone.dart' as tz;
 import '../../main.dart';
 import '/data/task_data_store.dart';
 import '/models/task.dart';
@@ -131,20 +132,43 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
     await _taskDataStore.addTask(task: newTask);
 
-    if (_selectedDate != null && _selectedTime != null) {
+    if (_selectedTime != null) {
       final scheduledDate = DateTime(
-        _selectedDate!.year,
-        _selectedDate!.month,
-        _selectedDate!.day,
+        _selectedDate?.year ?? DateTime.now().year,
+        _selectedDate?.month ?? DateTime.now().month,
+        _selectedDate?.day ?? DateTime.now().day,
         _selectedTime!.hour,
         _selectedTime!.minute,
       );
 
-      localNotification.showNotification(
-        id: newTask.id.hashCode,
-        title: 'Task Reminder',
-        body: 'Don\'t forget to complete your task: ${newTask.title}',
-      );
+      final tz.TZDateTime scheduledNotificationDate =
+          tz.TZDateTime.from(scheduledDate, tz.local);
+
+      print('Current time: ${tz.TZDateTime.now(tz.local)}');
+      print('Scheduled notification date: $scheduledNotificationDate');
+
+      if (scheduledNotificationDate.isAfter(tz.TZDateTime.now(tz.local))) {
+        print('Scheduling notification...');
+        try {
+          localNotification.showNotification(
+            id: newTask.id.hashCode,
+            title: _taskController.text,
+            body: 'Don\'t forget to complete your task: ${newTask.title}',
+          );
+
+          localNotification.scheduleNotification(
+            id: newTask.id.hashCode,
+            title: _taskController.text,
+            body: 'Don\'t forget to complete your task: ${newTask.title}',
+            scheduledDate: scheduledNotificationDate,
+          );
+          print('Notification scheduled successfully.');
+        } catch (e) {
+          print('Error scheduling notification: $e');
+        }
+      } else {
+        print('Error: Scheduled date must be in the future.');
+      }
     }
 
     Navigator.pop(context);
@@ -162,71 +186,73 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
           appBarTitle: 'Lists',
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 10),
-                Text(
-                  _taskTitle,
-                  style:
-                      const TextStyle(fontSize: 20, color: AppColors.textColor),
-                ),
-                const SizedBox(height: 20),
-                ValueListenableBuilder(
-                  valueListenable: _taskDataStore.listenToTasks(),
-                  builder: (context, Box<Task> box, _) {
-                    final tasks = box.values
-                        .where((task) => task.taskListId == _taskListId)
-                        .toList();
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 10),
+                  Text(
+                    _taskTitle,
+                    style: const TextStyle(
+                        fontSize: 20, color: AppColors.textColor),
+                  ),
+                  const SizedBox(height: 20),
+                  ValueListenableBuilder(
+                    valueListenable: _taskDataStore.listenToTasks(),
+                    builder: (context, Box<Task> box, _) {
+                      final tasks = box.values
+                          .where((task) => task.taskListId == _taskListId)
+                          .toList();
 
-                    print('Tasks: $tasks');
-                    print('Task count: ${tasks.length}');
+                      print('Tasks: $tasks');
+                      print('Task count: ${tasks.length}');
 
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: tasks.length,
-                      itemBuilder: (context, index) {
-                        final task = tasks[index];
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: tasks.length,
+                        itemBuilder: (context, index) {
+                          final task = tasks[index];
 
-                        return TaskListItem(
-                          title: task.title,
-                          dueDate: task.dueDate,
-                          dueTime: task.dueTime,
-                          isCompleted: task.isCompleted,
-                          isStarred: task.isStarred,
-                          onCompletedChanged: (value) {
-                            setState(() {
-                              task.isCompleted = value;
-                              task.save();
-                            });
-                          },
-                          onStarredChanged: (value) {
-                            setState(() {
-                              task.isStarred = value;
-                              task.save();
-                            });
-                          },
-                          onTap: () {
-                            Navigator.pushNamed(
-                              context,
-                              TaskDetailsView.routeName,
-                              arguments: {
-                                'taskId': task.id,
-                                'taskTitle': task.title,
-                                'taskNote': task.description,
-                                'taskDueDate': task.dueDate,
-                                'taskDueTime': task.dueTime,
-                                'isCompleted': task.isCompleted,
-                                'isStarred': task.isStarred,
-                              },
-                            );
-                          },
-                        );
-                      },
-                    );
-                  },
-                ),
-              ],
+                          return TaskListItem(
+                            title: task.title,
+                            dueDate: task.dueDate,
+                            dueTime: task.dueTime,
+                            isCompleted: task.isCompleted,
+                            isStarred: task.isStarred,
+                            onCompletedChanged: (value) {
+                              setState(() {
+                                task.isCompleted = value;
+                                task.save();
+                              });
+                            },
+                            onStarredChanged: (value) {
+                              setState(() {
+                                task.isStarred = value;
+                                task.save();
+                              });
+                            },
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                TaskDetailsView.routeName,
+                                arguments: {
+                                  'taskId': task.id,
+                                  'taskTitle': task.title,
+                                  'taskNote': task.description,
+                                  'taskDueDate': task.dueDate,
+                                  'taskDueTime': task.dueTime,
+                                  'isCompleted': task.isCompleted,
+                                  'isStarred': task.isStarred,
+                                },
+                              );
+                            },
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),

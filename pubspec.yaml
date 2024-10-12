@@ -42,6 +42,9 @@ dependencies:
   hive_flutter: ^1.1.0
   flutter_local_notifications: ^17.2.3
   timezone: ^0.9.4
+  sensors_plus: ^6.0.1
+  syncfusion_flutter_charts: ^27.1.52
+  permission_handler: ^11.3.1
 
 dev_dependencies:
   flutter_test:

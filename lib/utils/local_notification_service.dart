@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 class LocalNotification {
   late AndroidNotificationChannel channel;
@@ -18,10 +19,10 @@ class LocalNotification {
 
   AndroidNotificationChannel get androidNotificationChannel {
     return const AndroidNotificationChannel(
-      'thesmartstream_local_channel', // id
-      'The Smart Stream User Notifications', // title
+      'todo_sensor_tracking',
+      'Todo & Sensor Tracking Notifications',
       description:
-          'This channel is used for The Smart Stream local notifications.',
+          'Notifications for tasks and sensor tracking in the Todo & Sensor Tracking app',
       importance: Importance.high,
       playSound: true,
     );
@@ -52,7 +53,7 @@ class LocalNotification {
 
     notificationDetails = NotificationDetails(
       android: androidNotificationDetails,
-      iOS: DarwinNotificationDetails(),
+      iOS: const DarwinNotificationDetails(),
     );
 
     if (defaultTargetPlatform == TargetPlatform.android) {
@@ -65,8 +66,11 @@ class LocalNotification {
     isFlutterLocalNotificationsInitialized = true;
   }
 
-  void showNotification(
-      {required int id, required String title, required String body}) async {
+  void showNotification({
+    required int id,
+    required String title,
+    required String body,
+  }) async {
     if (kIsWeb) {
       return;
     }
@@ -79,7 +83,41 @@ class LocalNotification {
       flutterLocalNotificationsPlugin.show(
           id, title, body, notificationDetails);
     } catch (e) {
-      print('Error showing notification: $e');
+      if (kDebugMode) {
+        print('Error showing notification: $e');
+      }
+    }
+  }
+
+  void scheduleNotification({
+    required int id,
+    required String title,
+    required String body,
+    required DateTime scheduledDate,
+  }) async {
+    if (kIsWeb) {
+      return;
+    }
+
+    if (!isFlutterLocalNotificationsInitialized) {
+      await setupFlutterNotifications();
+    }
+
+    try {
+      flutterLocalNotificationsPlugin.zonedSchedule(
+        id,
+        title,
+        body,
+        tz.TZDateTime.from(scheduledDate, tz.local),
+        notificationDetails,
+        androidAllowWhileIdle: true, // Allow while the device is in idle state
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error scheduling notification: $e');
+      }
     }
   }
 }

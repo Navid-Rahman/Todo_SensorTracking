@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:to_do_sensor_tracking/data/task_data_store.dart';
 import 'package:to_do_sensor_tracking/data/task_list_data_store.dart';
 import 'package:to_do_sensor_tracking/models/time_of_day_adaptar.dart';
@@ -10,6 +11,8 @@ import 'package:to_do_sensor_tracking/models/time_of_day_adaptar.dart';
 import 'package:to_do_sensor_tracking/presentation/home_page.dart';
 import 'package:to_do_sensor_tracking/routes.dart';
 import 'package:to_do_sensor_tracking/utils/local_notification_service.dart';
+
+import 'package:timezone/data/latest.dart' as tz;
 
 import 'models/task.dart';
 import 'models/task_list.dart';
@@ -19,6 +22,9 @@ final LocalNotification localNotification = LocalNotification();
 Future<void> main() async {
   // Ensure that the WidgetsBinding is initialized before running the app
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize timezone data
+  tz.initializeTimeZones();
 
   // Initialize Hive data before running the app
   await Hive.initFlutter();
@@ -54,7 +60,19 @@ class MyApp extends StatelessWidget {
 
   Future<void> _requestPermissions() async {
     final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    if (Platform.isIOS || Platform.isMacOS) {
+
+    if (Platform.isAndroid) {
+      var status = await Permission.scheduleExactAlarm.status;
+      if (!status.isGranted) {
+        await Permission.scheduleExactAlarm.request();
+      }
+
+      var postNotificationStatus = await Permission.notification.status;
+
+      if (!postNotificationStatus.isGranted) {
+        await Permission.notification.request();
+      }
+    } else if (Platform.isIOS) {
       await flutterLocalNotificationsPlugin
           .resolvePlatformSpecificImplementation<
               IOSFlutterLocalNotificationsPlugin>()
@@ -63,23 +81,18 @@ class MyApp extends StatelessWidget {
             badge: true,
             sound: true,
           );
-      await flutterLocalNotificationsPlugin
-          .resolvePlatformSpecificImplementation<
-              MacOSFlutterLocalNotificationsPlugin>()
-          ?.requestPermissions(
-            alert: true,
-            badge: true,
-            sound: true,
-          );
-    } else if (Platform.isAndroid) {
-      final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
-          flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>();
+    }
 
-      final bool? grantedNotificationPermission =
-          await androidImplementation?.requestNotificationsPermission();
-      debugPrint(
-          'Notifications permission granted: $grantedNotificationPermission');
+    if (Platform.isIOS) {
+      var status = await Permission.notification.status;
+      if (!status.isGranted) {
+        await Permission.notification.request();
+      }
+    } else if (Platform.isAndroid) {
+      var status = await Permission.notification.status;
+      if (!status.isGranted) {
+        await Permission.notification.request();
+      }
     }
   }
 }
