@@ -1,19 +1,15 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:to_do_sensor_tracking/data/task_data_store.dart';
-import 'package:to_do_sensor_tracking/data/task_list_data_store.dart';
-import 'package:to_do_sensor_tracking/models/time_of_day_adaptar.dart';
-
-import 'package:to_do_sensor_tracking/presentation/home_page.dart';
-import 'package:to_do_sensor_tracking/routes.dart';
-import 'package:to_do_sensor_tracking/utils/local_notification_service.dart';
-
+import 'data/task_data_store.dart';
+import 'data/task_list_data_store.dart';
+import 'models/time_of_day_adaptar.dart';
+import 'presentation/home_page.dart';
+import 'routes.dart';
+import 'utils/local_notification_service.dart';
 import 'package:timezone/data/latest.dart' as tz;
-
 import 'models/task.dart';
 import 'models/task_list.dart';
 

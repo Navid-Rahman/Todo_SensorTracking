@@ -40,9 +40,9 @@ class _SensorTrackerState extends State<SensorTracker> {
   }
 
   void _startSensorStreaming() {
-    _gyroSubscription = gyroscopeEvents.listen((GyroscopeEvent event) {
+    _gyroSubscription = gyroscopeEventStream().listen((GyroscopeEvent event) {
       setState(() {
-        print('Gyroscope: x=${event.x}, y=${event.y}, z=${event.z}');
+        // print('Gyroscope: x=${event.x}, y=${event.y}, z=${event.z}');
         gyroXData.add(event.x);
         gyroYData.add(event.y);
         gyroZData.add(event.z);
@@ -50,9 +50,10 @@ class _SensorTrackerState extends State<SensorTracker> {
       });
     });
 
-    _accelSubscription = accelerometerEvents.listen((AccelerometerEvent event) {
+    _accelSubscription =
+        accelerometerEventStream().listen((AccelerometerEvent event) {
       setState(() {
-        print('Accelerometer: x=${event.x}, y=${event.y}, z=${event.z}');
+        // print('Accelerometer: x=${event.x}, y=${event.y}, z=${event.z}');
         accelXData.add(event.x);
         accelYData.add(event.y);
         accelZData.add(event.z);

@@ -90,7 +90,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 },
                 onTimeChanged: (time) {
                   setModalState(() {
-                    print('Time selected: $time');
                     _selectedTime = time;
                   });
                 },
@@ -110,16 +109,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   }
 
   void _saveTask() async {
-    print('Starting to save task');
-    print('Task title: ${_taskController.text}');
-    print('Task note: $_note');
-    print('Task due date: $_selectedDate');
-    print('Task due time: $_selectedTime');
-    print('Task is completed: $_isCompleted');
-    print('Task is starred: $_isStarred');
-    print('Task list id: $_taskListId');
-    print('Task list title: $_taskTitle');
-
     final newTask = Task.create(
       taskListId: _taskListId,
       title: _taskController.text,
@@ -144,31 +133,19 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       final tz.TZDateTime scheduledNotificationDate =
           tz.TZDateTime.from(scheduledDate, tz.local);
 
-      print('Current time: ${tz.TZDateTime.now(tz.local)}');
-      print('Scheduled notification date: $scheduledNotificationDate');
-
       if (scheduledNotificationDate.isAfter(tz.TZDateTime.now(tz.local))) {
-        print('Scheduling notification...');
-        try {
-          localNotification.scheduleNotification(
-            id: newTask.id.hashCode,
-            title: 'Task Reminder',
-            body: 'Don\'t forget to complete your task: ${newTask.title}',
-            scheduledDate: scheduledNotificationDate,
-          );
-          print('Notification scheduled successfully.');
-        } catch (e) {
-          print('Error scheduling notification: $e');
-        }
+        localNotification.scheduleNotification(
+          id: newTask.id.hashCode,
+          title: 'Task Reminder',
+          body: 'Don\'t forget to complete your task: ${newTask.title}',
+          scheduledDate: scheduledNotificationDate,
+        );
       } else {
         print('Error: Scheduled date must be in the future.');
       }
     }
 
     Navigator.pop(context);
-
-    print('Task added: ${newTask.id}');
-    print('Task count: ${_taskDataStore.getTaskCount()}');
   }
 
   @override
@@ -197,9 +174,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       final tasks = box.values
                           .where((task) => task.taskListId == _taskListId)
                           .toList();
-
-                      print('Tasks: $tasks');
-                      print('Task count: ${tasks.length}');
 
                       return ListView.builder(
                         shrinkWrap: true,

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:to_do_sensor_tracking/presentation/add_task/add_task_screen.dart';
 import '../../constants/app_colors.dart';
 import '/utils/base_page.dart';
 import '/data/task_data_store.dart';
-import '/models/task.dart';
 
 class TaskDetailsView extends StatelessWidget {
   const TaskDetailsView({super.key});
@@ -25,13 +23,6 @@ class TaskDetailsView extends StatelessWidget {
     final bool isStarred = taskDetails['isStarred'] ?? false;
     final TaskDataStore taskDataStore = TaskDataStore();
 
-    print('Task ID: $taskId');
-    print('Task Title: $taskTitle');
-    print('Task Note: $taskNote');
-    print('Task Due Date: $taskDueDate');
-    print('Task Due Time: $taskDueTime');
-    print('Is Completed: $isCompleted');
-    print('Is Starred: $isStarred');
     return Stack(
       children: [
         BasePage(

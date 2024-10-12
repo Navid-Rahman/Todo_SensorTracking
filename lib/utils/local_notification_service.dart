@@ -106,28 +106,19 @@ class LocalNotification {
     final tz.TZDateTime scheduledNotificationDate =
         tz.TZDateTime.from(scheduledDate, tz.local);
 
-    print('Current time: ${tz.TZDateTime.now(tz.local)}');
-    print('Scheduled notification date: $scheduledNotificationDate');
-
     if (scheduledNotificationDate.isBefore(tz.TZDateTime.now(tz.local))) {
-      print('Error: Scheduled date must be in the future.');
       return;
     }
 
-    try {
-      await flutterLocalNotificationsPlugin.zonedSchedule(
-        id,
-        title,
-        body,
-        scheduledNotificationDate,
-        notificationDetails,
-        androidAllowWhileIdle: true,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
-      );
-      print('Notification scheduled successfully.');
-    } catch (e) {
-      print('Error scheduling notification: $e');
-    }
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      id,
+      title,
+      body,
+      scheduledNotificationDate,
+      notificationDetails,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+    );
   }
 }

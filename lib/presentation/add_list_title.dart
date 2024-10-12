@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:to_do_sensor_tracking/data/task_list_data_store.dart';
 import 'package:to_do_sensor_tracking/models/task_list.dart';
 import 'package:to_do_sensor_tracking/utils/base_page.dart';
@@ -41,9 +40,6 @@ class _AddListTitleState extends State<AddListTitle> {
     if (title.isNotEmpty) {
       var taskList = TaskList.create(title: title);
       await _taskListDataStore.addTaskList(taskList: taskList);
-
-      print('Title saved: $title');
-      print('TaskList saved: $taskList');
     }
   }
 
