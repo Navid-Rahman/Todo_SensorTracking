@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:to_do_sensor_tracking/presentation/sensor/sensor_tracker.dart';
 import 'todo_list/todo_splash_screen.dart';
 import '/utils/base_page.dart';
 
@@ -28,7 +29,9 @@ class HomePage extends StatelessWidget {
               'Sensor Tracking',
               const Color(0xff3F69FF),
               Colors.white,
-              () {},
+              () {
+                Navigator.pushNamed(context, SensorTracker.routeName);
+              },
             ),
           ],
         ),
