@@ -11,7 +11,7 @@
 
     <application
 
-        android:label="to_do_sensor_tracking"
+        android:label="Todo &amp; Sensor Tracking App"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
