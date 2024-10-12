@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:to_do_sensor_tracking/data/task_list_data_store.dart';
-import 'package:to_do_sensor_tracking/models/task_list.dart';
-import 'package:to_do_sensor_tracking/utils/base_page.dart';
+
+import '/data/task_list_data_store.dart';
+import '/models/task_list.dart';
+import '/utils/base_page.dart';
 
 class AddListTitle extends StatefulWidget {
   const AddListTitle({super.key});

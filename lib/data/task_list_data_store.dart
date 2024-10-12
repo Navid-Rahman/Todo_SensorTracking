@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
+
 import 'package:hive_flutter/hive_flutter.dart';
-import '../models/task_list.dart';
+
+import '/models/task_list.dart';
 
 class TaskListDataStore {
   static const boxName = "taskLists";

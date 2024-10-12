@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+
 import 'package:intl/intl.dart';
-import '../../constants/app_colors.dart';
-import '/utils/base_page.dart';
+
+import '/constants/app_colors.dart';
 import '/data/task_data_store.dart';
+import '/utils/base_page.dart';
 
 class TaskDetailsView extends StatelessWidget {
   const TaskDetailsView({super.key});

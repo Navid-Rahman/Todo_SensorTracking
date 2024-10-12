@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:to_do_sensor_tracking/presentation/sensor/sensor_tracker.dart';
-import 'todo_list/todo_splash_screen.dart';
+
 import '/utils/base_page.dart';
+import 'sensor/sensor_tracker.dart';
+import 'todo_list/todo_splash_screen.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});

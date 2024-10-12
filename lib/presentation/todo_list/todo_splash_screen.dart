@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'todo_list_home_screen.dart';
-import '/utils/base_page.dart';
 
 import '/constants/assets.dart';
+import '/utils/base_page.dart';
+import 'todo_list_home_screen.dart';
 
 class TodoSplashScreen extends StatefulWidget {
   const TodoSplashScreen({super.key});

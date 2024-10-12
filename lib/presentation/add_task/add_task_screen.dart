@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:timezone/timezone.dart' as tz;
-import '../../main.dart';
+
+import '/constants/app_colors.dart';
 import '/data/task_data_store.dart';
+import '/main.dart';
 import '/models/task.dart';
+import '/utils/base_page.dart';
 import 'task_details_view.dart';
 import 'widgets/add_task_modal.dart';
 import 'widgets/task_list_item.dart';
-import '/constants/app_colors.dart';
-import '/utils/base_page.dart';
 
 class AddTaskScreen extends StatefulWidget {
   const AddTaskScreen({super.key});

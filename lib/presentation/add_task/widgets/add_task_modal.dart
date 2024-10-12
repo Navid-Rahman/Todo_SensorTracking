@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:to_do_sensor_tracking/presentation/add_task/widgets/task_action_row.dart';
+
 import '/constants/app_colors.dart';
+import 'task_action_row.dart';
 
 class AddTaskModal extends StatelessWidget {
   final TextEditingController taskController;
